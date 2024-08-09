@@ -1,0 +1,54 @@
+# Simplify360 Question 2
+
+from collections import defaultdict, deque
+
+friends = {
+    'Alice': ['Bob'],
+    'Bob': ['Alice', 'Janice'],
+    'Janice': ['Bob']
+}
+
+def find_common_friends(person1, person2):
+    set1 = set(friends.get(person1, []))
+    set2 = set(friends.get(person2, []))
+    return list(set1.intersection(set2))
+
+def find_nth_connection(start, target):
+    if start not in friends or target not in friends:
+        return -1
+
+    visited = set()
+    queue = deque([(start, 0)])  # Queue holds tuples of (person, depth)
+
+    while queue:
+        current, depth = queue.popleft()
+        if current == target:
+            return depth
+        
+        if current in visited:
+            continue
+
+        visited.add(current)
+        for friend in friends.get(current, []):
+            if friend not in visited:
+                queue.append((friend, depth + 1))
+    
+    return -1
+
+def main():
+    person1 = 'Alice'
+    person2 = 'Bob'
+    
+    friends_person1 = friends.get(person1, [])
+    friends_person2 = friends.get(person2, [])
+    print(f"Friends of {person1}: {friends_person1}")
+    print(f"Friends of {person2}: {friends_person2}")
+    
+    common_friends = find_common_friends(person1, person2)
+    print(f"Common friends of {person1} and {person2}: {common_friends}")
+    
+    nth_connection = find_nth_connection(person1, 'Janice')
+    print(f"Connection level between {person1} and Janice: {nth_connection}")
+
+if __name__ == "__main__":
+    main()
